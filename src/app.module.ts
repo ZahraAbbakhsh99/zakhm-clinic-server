@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmConfig } from './config/typeorm.config';
+import { UploadModule } from './upload/upload.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { typeOrmConfig } from './config/typeorm.config';
       useFactory: async (configService: ConfigService) => typeOrmConfig(configService),
       inject: [ConfigService],
     }),
+    UploadModule,
   ],
   controllers: [],
   providers: [],
