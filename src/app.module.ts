@@ -3,6 +3,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmConfig } from './config/typeorm.config';
 import { UploadModule } from './upload/upload.module';
+import { AdminModule } from './admin/admin.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -16,6 +18,8 @@ import { UploadModule } from './upload/upload.module';
       inject: [ConfigService],
     }),
     UploadModule,
+    AdminModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],
