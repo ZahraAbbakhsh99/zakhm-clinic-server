@@ -5,6 +5,8 @@ import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { ExcludeFieldsInterceptor } from './common/interceptors/exclude-fields.interceptor';
+
 
 async function bootstrap() {
     const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -31,6 +33,7 @@ async function bootstrap() {
 
   // global interceptors 
   app.useGlobalInterceptors(new TransformInterceptor());
+  app.useGlobalInterceptors(new ExcludeFieldsInterceptor(['createdAt', 'updatedAt']));
   
   // Swagger
   const config = new DocumentBuilder()

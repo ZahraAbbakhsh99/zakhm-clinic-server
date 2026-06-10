@@ -5,6 +5,7 @@ import { typeOrmConfig } from './config/typeorm.config';
 import { UploadModule } from './upload/upload.module';
 import { AdminModule } from './admin/admin.module';
 import { AuthModule } from './auth/auth.module';
+import { SiteSettingsModule } from './site-settings/site-settings.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { AuthModule } from './auth/auth.module';
     UploadModule,
     AdminModule,
     AuthModule,
+    SiteSettingsModule,
   ],
   controllers: [],
   providers: [],
