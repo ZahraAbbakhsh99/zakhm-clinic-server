@@ -6,6 +6,7 @@ import { UploadModule } from './upload/upload.module';
 import { AdminModule } from './admin/admin.module';
 import { AuthModule } from './auth/auth.module';
 import { SiteSettingsModule } from './site-settings/site-settings.module';
+import { TestimonialVideosModule } from './testimonial-videos/testimonial-videos.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { SiteSettingsModule } from './site-settings/site-settings.module';
     AdminModule,
     AuthModule,
     SiteSettingsModule,
+    TestimonialVideosModule,
   ],
   controllers: [],
   providers: [],
