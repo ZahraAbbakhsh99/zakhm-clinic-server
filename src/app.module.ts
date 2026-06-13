@@ -14,6 +14,7 @@ import { ArticleModule } from './article/article.module';
 import { AppointmentModule } from './appointment/appointment.module';
 import { DoctorModule } from './doctor/doctor.module';
 import { NurseApplicationModule } from './nurse-application/nurse-application.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { NurseApplicationModule } from './nurse-application/nurse-application.mo
     AppointmentModule,
     DoctorModule,
     NurseApplicationModule,
+    DashboardModule,
   ],
   controllers: [],
   providers: [],

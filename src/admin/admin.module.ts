@@ -28,6 +28,9 @@ import { DoctorModule} from '../doctor/doctor.module';
 import { AdminNurseApplicationController } from './admin-nurse-application.controller';
 import { NurseApplicationModule } from '../nurse-application/nurse-application.module';
 
+import { AdminDashboardController} from './admin-dashboard.controller';
+import { DashboardModule} from '../dashboard/dashboard.module';
+
 @Module({
   imports: [TypeOrmModule.forFeature([Admin]),
             TestimonialVideosModule,
@@ -38,6 +41,7 @@ import { NurseApplicationModule } from '../nurse-application/nurse-application.m
             AppointmentModule,
             DoctorModule,
             NurseApplicationModule,
+            DashboardModule,
           ],
   providers: [AdminService],
   exports: [AdminService],
@@ -51,6 +55,7 @@ import { NurseApplicationModule } from '../nurse-application/nurse-application.m
     AdminAppointmentController,
     AdminDoctorController,
     AdminNurseApplicationController,
+    AdminDashboardController,
   ],
 })
 export class AdminModule {}
