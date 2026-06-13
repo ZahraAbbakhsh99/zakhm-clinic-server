@@ -19,18 +19,18 @@ export class AdminCommentController {
   async findAll(@Query() query: QueryCommentDto) {
     const { page = 1, limit = 10, entityType, isApproved, search } = query;
     const result = await this.commentService.findAllAdmin(page, limit, entityType, isApproved, search);
-    return { success: true, ...result };
+    return { ...result };
   }
 
   @Patch(':id/approve')
   async approve(@Param('id') id: string) {
     await this.commentService.approve(id);
-    return { success: true, massage: 'نظر تایید شد'  };
+    return { massage: 'نظر تایید شد'  };
   }
 
   @Delete(':id')
   async reject(@Param('id') id: string) {
     await this.commentService.reject(id);
-    return { success: true, message: 'نظر رد شد' };
+    return { message: 'نظر رد شد' };
   }
 }

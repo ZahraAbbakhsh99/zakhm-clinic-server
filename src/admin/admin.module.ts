@@ -16,12 +16,16 @@ import { PortfolioModule} from '../portfolio/portfolio.module';
 import { AdminCommentController } from './admin-comment.controller';
 import { CommentModule } from '../comment/comment.module';
 
+import { AdminArticleController } from './admin-article.controller';
+import { ArticleModule } from '../article/article.module';
+
 @Module({
   imports: [TypeOrmModule.forFeature([Admin]),
             TestimonialVideosModule,
             CategoryModule,
             PortfolioModule,
             CommentModule,
+            ArticleModule,
           ],
   providers: [AdminService],
   exports: [AdminService],
@@ -31,6 +35,7 @@ import { CommentModule } from '../comment/comment.module';
     AdminCategoryController,
     AdminPortfolioController,
     AdminCommentController,
+    AdminArticleController,
   ],
 })
 export class AdminModule {}

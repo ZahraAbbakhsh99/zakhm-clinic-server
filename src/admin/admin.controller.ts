@@ -19,6 +19,6 @@ export class AdminController {
       throw new ForbiddenException('این روت در حال حاضر غیرفعال است');
     }
     const admin = await this.adminService.create(createAdminDto);
-    return { success: true, data: admin };
+    return { data: admin };
   }
 }

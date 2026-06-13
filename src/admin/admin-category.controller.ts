@@ -19,18 +19,18 @@ export class AdminCategoryController {
   @Post()
   async create(@Body() createDto: CreateCategoryDto) {
     const category = await this.categoryService.create(createDto);
-    return { success: true, data: category };
+    return { data: category };
   }
 
   @Put(':id')
   async update(@Param('id') id: string, @Body() updateDto: UpdateCategoryDto) {
     const category = await this.categoryService.update(id, updateDto);
-    return { success: true, data: category };
+    return { data: category };
   }
 
   @Delete(':id')
   async remove(@Param('id') id: string) {
     await this.categoryService.remove(id);
-    return { success: true, message: 'دسته‌بندی حذف شد' };
+    return { message: 'دسته‌بندی حذف شد' };
   }
 }

@@ -10,6 +10,7 @@ import { TestimonialVideosModule } from './testimonial-videos/testimonial-videos
 import { CategoryModule } from './category/category.module';
 import { PortfolioModule } from './portfolio/portfolio.module';
 import { CommentModule } from './comment/comment.module';
+import { ArticleModule } from './article/article.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { CommentModule } from './comment/comment.module';
     CategoryModule,
     PortfolioModule,
     CommentModule,
+    ArticleModule,
   ],
   controllers: [],
   providers: [],
