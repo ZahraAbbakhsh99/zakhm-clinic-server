@@ -7,6 +7,9 @@ import { AdminModule } from './admin/admin.module';
 import { AuthModule } from './auth/auth.module';
 import { SiteSettingsModule } from './site-settings/site-settings.module';
 import { TestimonialVideosModule } from './testimonial-videos/testimonial-videos.module';
+import { CategoryModule } from './category/category.module';
+import { PortfolioModule } from './portfolio/portfolio.module';
+import { CommentModule } from './comment/comment.module';
 
 @Module({
   imports: [
@@ -24,6 +27,9 @@ import { TestimonialVideosModule } from './testimonial-videos/testimonial-videos
     AuthModule,
     SiteSettingsModule,
     TestimonialVideosModule,
+    CategoryModule,
+    PortfolioModule,
+    CommentModule,
   ],
   controllers: [],
   providers: [],

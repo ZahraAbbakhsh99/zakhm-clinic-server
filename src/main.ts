@@ -29,7 +29,7 @@ async function bootstrap() {
   }));
 
   // global filter
-  // app.useGlobalFilters(new AllExceptionsFilter()); 
+  app.useGlobalFilters(new AllExceptionsFilter()); 
 
   // global interceptors 
   app.useGlobalInterceptors(new TransformInterceptor());
