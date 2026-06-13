@@ -19,6 +19,9 @@ import { CommentModule } from '../comment/comment.module';
 import { AdminArticleController } from './admin-article.controller';
 import { ArticleModule } from '../article/article.module';
 
+import { AdminAppointmentController} from './admin-appointment.controller';
+import { AppointmentModule} from '../appointment/appointment.module';
+
 @Module({
   imports: [TypeOrmModule.forFeature([Admin]),
             TestimonialVideosModule,
@@ -26,6 +29,7 @@ import { ArticleModule } from '../article/article.module';
             PortfolioModule,
             CommentModule,
             ArticleModule,
+            AppointmentModule,
           ],
   providers: [AdminService],
   exports: [AdminService],
@@ -36,6 +40,7 @@ import { ArticleModule } from '../article/article.module';
     AdminPortfolioController,
     AdminCommentController,
     AdminArticleController,
+    AdminAppointmentController,
   ],
 })
 export class AdminModule {}

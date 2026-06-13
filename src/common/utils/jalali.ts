@@ -74,4 +74,15 @@ private static persianMonths: string[] = [
     d.setHours(23, 59, 59, 999);
     return d;
   }
+
+  static convertJalaliToGregorian(jalaliDate: string): Date | null {
+    if (!jalaliDate) return null;
+    const cleaned = jalaliDate.replace(/-/g, '/');
+    const parts = cleaned.split('/');
+    if (parts.length !== 3) return null;
+    const [year, month, day] = parts.map(Number);
+    if (isNaN(year) || isNaN(month) || isNaN(day)) return null;
+    const gregorian = moment(`${year}/${month}/${day}`, 'jYYYY/jMM/jDD').toDate();
+    return isNaN(gregorian.getTime()) ? null : gregorian;
+  }
 }
