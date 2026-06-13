@@ -22,6 +22,9 @@ import { ArticleModule } from '../article/article.module';
 import { AdminAppointmentController} from './admin-appointment.controller';
 import { AppointmentModule} from '../appointment/appointment.module';
 
+import { AdminDoctorController} from './admin-doctor.controller';
+import { DoctorModule} from '../doctor/doctor.module';
+
 @Module({
   imports: [TypeOrmModule.forFeature([Admin]),
             TestimonialVideosModule,
@@ -30,6 +33,7 @@ import { AppointmentModule} from '../appointment/appointment.module';
             CommentModule,
             ArticleModule,
             AppointmentModule,
+            DoctorModule,
           ],
   providers: [AdminService],
   exports: [AdminService],
@@ -41,6 +45,7 @@ import { AppointmentModule} from '../appointment/appointment.module';
     AdminCommentController,
     AdminArticleController,
     AdminAppointmentController,
+    AdminDoctorController,
   ],
 })
 export class AdminModule {}

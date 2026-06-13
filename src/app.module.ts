@@ -12,6 +12,7 @@ import { PortfolioModule } from './portfolio/portfolio.module';
 import { CommentModule } from './comment/comment.module';
 import { ArticleModule } from './article/article.module';
 import { AppointmentModule } from './appointment/appointment.module';
+import { DoctorModule } from './doctor/doctor.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { AppointmentModule } from './appointment/appointment.module';
     CommentModule,
     ArticleModule,
     AppointmentModule,
+    DoctorModule,
   ],
   controllers: [],
   providers: [],
