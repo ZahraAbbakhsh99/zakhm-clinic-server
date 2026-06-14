@@ -28,7 +28,7 @@ export class NurseApplicationService {
     search?: string,
     degree?: string,
     status?: NurseApplicationStatus,
-  ): Promise<{ items: Partial<NurseApplicationResponseDto>[]; total: number }> {
+  ): Promise<{ items: NurseApplicationResponseDto[]; total: number }> {
     const qb = this.applicationRepository.createQueryBuilder('n');
 
     if (search) {
@@ -47,17 +47,22 @@ export class NurseApplicationService {
 
     const [items, total] = await qb.getManyAndCount();
 
-    const dtos = items.map(item => ({
+    const dtos = items.map(item => new NurseApplicationResponseDto({
       id: item.id,
       fullName: item.fullName,
       avatar: item.avatar,
-      status: item.status,
+      phone: item.phone,
       nationalCode: item.nationalCode,
-      createdAt: item.createdAt,
       degree: item.degree,
       woundCareExperience: item.woundCareExperience,
       fieldExperience: item.fieldExperience,
+      province: item.province,
+      city: item.city,
       address: item.address,
+      medicalCouncilFile: item.medicalCouncilFile,
+      status: item.status,
+      createdAt: item.createdAt,
+      updatedAt: item.updatedAt,
     }));
     return { items: dtos, total };
   }

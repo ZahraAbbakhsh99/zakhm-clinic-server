@@ -1,4 +1,4 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector  } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter'; 
@@ -6,7 +6,7 @@ import { TransformInterceptor } from './common/interceptors/transform.intercepto
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { ExcludeFieldsInterceptor } from './common/interceptors/exclude-fields.interceptor';
-
+import { ClassSerializerInterceptor } from '@nestjs/common';
 
 async function bootstrap() {
     const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -34,6 +34,7 @@ async function bootstrap() {
   // global interceptors 
   app.useGlobalInterceptors(new TransformInterceptor());
   app.useGlobalInterceptors(new ExcludeFieldsInterceptor(['createdAt', 'updatedAt']));
+  app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   
   // Swagger
   const config = new DocumentBuilder()

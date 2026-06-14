@@ -27,50 +27,6 @@ export class AppointmentService {
     return this.appointmentRepository.save(appointment);
   }
 
-  // async findAllAdmin(
-  //   page: number,
-  //   limit: number,
-  //   search?: string,
-  //   categoryId?: string,
-  //   status?: AppointmentStatus,
-  //   fromDate?: string,
-  //   toDate?: string,
-  // ): Promise<{ items: AppointmentResponseDto[]; total: number }> {
-  //   const qb = this.appointmentRepository.createQueryBuilder('a')
-  //     .leftJoinAndSelect('a.category', 'category');
-
-  //   if (search) {
-  //     qb.andWhere('(a.fullName LIKE :search OR a.phone LIKE :search)', { search: `%${search}%` });
-  //   }
-  //   if (categoryId) {
-  //     qb.andWhere('a.categoryId = :categoryId', { categoryId });
-  //   }
-  //   if (status) {
-  //     qb.andWhere('a.status = :status', { status });
-  //   }
-  //   if (fromDate) {
-  //     qb.andWhere('a.createdAt >= :fromDate', { fromDate: new Date(fromDate) });
-  //   }
-  //   if (toDate) {
-  //     qb.andWhere('a.createdAt <= :toDate', { toDate: new Date(toDate) });
-  //   }
-
-  //   qb.orderBy('a.createdAt', 'DESC')
-  //     .skip((page - 1) * limit)
-  //     .take(limit);
-
-  //   const [items, total] = await qb.getManyAndCount();
-
-  //   const dtos = items.map(item => {
-  //     const { category, ...rest } = item;
-  //     return new AppointmentResponseDto({
-  //       ...rest,
-  //       categoryTitle: category?.title ?? '',
-  //     });
-  //   });
-  //   return { items: dtos, total };
-  // }
-
   async findAllAdmin(
     page: number,
     limit: number,

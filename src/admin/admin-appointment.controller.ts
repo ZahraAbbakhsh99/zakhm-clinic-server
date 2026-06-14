@@ -20,7 +20,7 @@ export class AdminAppointmentController {
   async findAll(@Query() query: QueryAppointmentDto) {
     const { page = 1, limit = 10, search, categoryId, status, fromDate, toDate } = query;
     const result = await this.appointmentService.findAllAdmin(page, limit, search, categoryId, status, fromDate, toDate);
-    return { ...result };
+    return { items: result.items, total: result.total };
   }
 
   @Get('status-counts')
