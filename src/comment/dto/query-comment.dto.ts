@@ -1,6 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional, IsString, IsBoolean, IsInt, Min } from 'class-validator';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 
 export class QueryCommentDto {
   @ApiPropertyOptional({ example: 1 })
@@ -24,12 +24,16 @@ export class QueryCommentDto {
 
   @ApiPropertyOptional({ example: false })
   @IsOptional()
-  @Type(() => Boolean)
+  @Transform(({ value }) => {
+    if (value === 'true' || value === true) return true;
+    if (value === 'false' || value === false) return false;
+    return undefined;
+  })
   @IsBoolean()
   isApproved?: boolean;
 
   @ApiPropertyOptional({ example: 'علی' })
   @IsOptional()
   @IsString()
-  search?: string; // جستجو در name, email, comment
+  search?: string;
 }

@@ -1,15 +1,16 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNotEmpty, IsEmail, IsIn } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsString, IsNotEmpty, IsEmail, IsOptional, IsIn } from 'class-validator';
 
 export class CreateCommentDto {
-  @ApiProperty({ example: 'portfolio', enum: ['portfolio', 'testimonial_video'] })
-  @IsIn(['portfolio', 'testimonial_video'])
-  entityType!: string;
+  @ApiPropertyOptional({ example: 'general', enum: ['general', 'portfolio', 'testimonial_video'] })
+  @IsOptional()
+  @IsIn(['general', 'portfolio', 'testimonial_video'])
+  entityType?: string;
 
-  @ApiProperty({ example: 'uuid-of-portfolio' })
+  @ApiPropertyOptional({ example: 'uuid-of-portfolio' })
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
-  entityId!: string;
+  entityId?: string;
 
   @ApiProperty({ example: 'علی رضایی' })
   @IsString()

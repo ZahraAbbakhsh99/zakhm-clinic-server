@@ -28,9 +28,15 @@ export class AdminCommentController {
     return { massage: 'نظر تایید شد'  };
   }
 
-  @Delete(':id')
+  @Patch(':id/reject')
   async reject(@Param('id') id: string) {
     await this.commentService.reject(id);
     return { message: 'نظر رد شد' };
+  }
+
+  @Delete(':id')
+  async remove(@Param('id') id: string) {
+    await this.commentService.remove(id);
+    return { message: 'نظر حذف شد' };
   }
 }

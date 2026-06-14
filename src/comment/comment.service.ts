@@ -12,10 +12,13 @@ export class CommentService {
   ) {}
 
   async create(createDto: CreateCommentDto): Promise<Comment> {
-    const comment = this.commentRepository.create({
-      ...createDto,
-      isApproved: false,
-    });
+    const comment = new Comment();
+    comment.name = createDto.name;
+    comment.email = createDto.email;
+    comment.comment = createDto.comment;
+    comment.entityType = createDto.entityType || 'general';
+    comment.entityId = createDto.entityId || 'general'; // مقدار پیش‌فرض 'general'
+    comment.isApproved = false;
     return this.commentRepository.save(comment);
   }
 
@@ -74,6 +77,11 @@ export class CommentService {
     return this.commentRepository.save(comment);
   }
 
+  async remove(id: string): Promise<void> {
+    const comment = await this.findOne(id);
+    await this.commentRepository.remove(comment);
+  }
+
   async getCountByEntity(
     entityType: string,
     entityId: string,
@@ -84,5 +92,15 @@ export class CommentService {
       where.isApproved = true;
     }
     return this.commentRepository.count({ where });
+  }
+
+  async findRandomApproved(limit: number = 3): Promise<Comment[]> {
+    const comments = await this.commentRepository
+      .createQueryBuilder('comment')
+      .where('comment.isApproved = :isApproved', { isApproved: true })
+      .orderBy('RANDOM()')
+      .limit(limit)
+      .getMany();
+    return comments;
   }
 }
