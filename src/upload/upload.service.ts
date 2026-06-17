@@ -58,6 +58,23 @@ export class UploadService {
     return { url: signedUrl, key };
   }
 
+
+  async uploadFileDirect(file: Express.Multer.File, subFolder: string = 'general'): Promise<string> {
+    const extension = path.extname(file.originalname);
+    const uniqueFileName = `${uuidv4()}${extension}`;
+    const key = `clinic-files/${subFolder}/${uniqueFileName}`;
+
+    const command = new PutObjectCommand({
+      Bucket: this.bucket,
+      Key: key,
+      Body: file.buffer,
+      ContentType: file.mimetype,
+    });
+
+    await this.s3Client.send(command);
+    return this.getPublicUrl(key);
+}
+
   /**
    * delete file by fileUrl
    * @param fileUrl 
@@ -99,3 +116,4 @@ export class UploadService {
     return mimeMap[extension.toLowerCase()] || 'application/octet-stream';
   }
 }
+

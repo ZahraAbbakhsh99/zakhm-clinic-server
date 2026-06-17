@@ -1,5 +1,6 @@
-import { Controller, Post, Body, Delete } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags, ApiBody } from '@nestjs/swagger';
+import { Controller, Post, Body, Delete, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags, ApiBody, ApiConsumes } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadService } from './upload.service';
 import { GetPresignedUrlDto } from './dto/get-presigned-url.dto';
 
@@ -14,15 +15,32 @@ export class UploadController {
     const subFolder = dto.type === 'image' ? 'images' : 'videos';
     const { url, key } = await this.uploadService.generatePresignedUrl(dto.fileName, subFolder);
     const finalPublicUrl = this.uploadService.getPublicUrl(key);
-
     return {
       success: true,
-      data: {
-        uploadUrl: url,          
-        fileKey: key,     
-        publicUrl: finalPublicUrl, 
-      },
+      data: { uploadUrl: url, fileKey: key, publicUrl: finalPublicUrl },
     };
+  }
+
+  @Post('file')
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: { type: 'string', format: 'binary' },
+        type: { type: 'string', enum: ['image', 'video'] },
+      },
+    },
+  })
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadFile(
+    @UploadedFile() file: Express.Multer.File,
+    @Body('type') type: 'image' | 'video',
+  ) {
+    if (!file) throw new Error('فایلی ارسال نشده است');
+    const subFolder = type === 'image' ? 'images' : 'videos';
+    const publicUrl = await this.uploadService.uploadFileDirect(file, subFolder);
+    return { success: true, data: { publicUrl } };
   }
 
   @Delete('file')
