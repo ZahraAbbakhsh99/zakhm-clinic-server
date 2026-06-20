@@ -1,11 +1,31 @@
-import { Controller, Post, Body, Delete, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Controller, Post, Body, Delete, UploadedFile, UseInterceptors, BadRequestException } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags, ApiBody, ApiConsumes } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadService } from './upload.service';
 import { GetPresignedUrlDto } from './dto/get-presigned-url.dto';
 
+const MAX_FILE_SIZE = {
+  image: 20 * 1024 * 1024,   // 20 MB
+  video: 100 * 1024 * 1024,   // 100 MB
+  file: 50 * 1024 * 1024,    // 50 MB
+  general: 10 * 1024 * 1024, // 10 MB
+};
+
+const ALLOWED_MIME_TYPES = {
+  image: ['image/jpeg', 'image/png', 'image/webp', 'image/gif'],
+  video: ['video/mp4', 'video/quicktime', 'video/x-msvideo'],
+  file: [
+    'application/pdf',
+    'application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'application/zip',
+    'application/x-rar-compressed',
+  ],
+  general: ['*/*'],
+};
+
 @ApiTags('Upload')
-@ApiBearerAuth()
+// @ApiBearerAuth()
 @Controller('upload')
 export class UploadController {
   constructor(private readonly uploadService: UploadService) {}
@@ -28,17 +48,64 @@ export class UploadController {
       type: 'object',
       properties: {
         file: { type: 'string', format: 'binary' },
-        type: { type: 'string', enum: ['image', 'video'] },
+        type: {
+          type: 'string',
+          enum: ['image', 'video', 'file', 'general'],
+          default: 'general',
+        },
       },
     },
   })
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FileInterceptor('file', {
+    limits: {
+      fileSize: MAX_FILE_SIZE.general,
+    },
+    fileFilter: (req, file, callback) => {
+      const allowed = Object.values(ALLOWED_MIME_TYPES).flat();
+      if (allowed.includes(file.mimetype)) {
+        callback(null, true);
+      } else {
+        callback(new BadRequestException('فرمت فایل مجاز نیست'), false);
+      }
+    },
+  }))
   async uploadFile(
     @UploadedFile() file: Express.Multer.File,
-    @Body('type') type: 'image' | 'video',
+    @Body('type') type: 'image' | 'video' | 'file' | 'general' = 'general',
   ) {
-    if (!file) throw new Error('فایلی ارسال نشده است');
-    const subFolder = type === 'image' ? 'images' : 'videos';
+    if (!file) throw new BadRequestException('فایلی ارسال نشده است');
+
+    let subFolder: string;
+    let maxSize: number;
+    let allowedMimes: string[];
+
+    if (type === 'image') {
+      subFolder = 'images';
+      maxSize = MAX_FILE_SIZE.image;
+      allowedMimes = ALLOWED_MIME_TYPES.image;
+    } else if (type === 'video') {
+      subFolder = 'videos';
+      maxSize = MAX_FILE_SIZE.video;
+      allowedMimes = ALLOWED_MIME_TYPES.video;
+    } else if (type === 'file') {
+      subFolder = 'files';
+      maxSize = MAX_FILE_SIZE.file;
+      allowedMimes = ALLOWED_MIME_TYPES.file;
+    } else {
+      subFolder = 'general';
+      maxSize = MAX_FILE_SIZE.general;
+      allowedMimes = ALLOWED_MIME_TYPES.general; 
+    }
+
+    if (file.size > maxSize) {
+      throw new BadRequestException(
+        `حجم فایل نباید بیشتر از ${maxSize / (1024 * 1024)} مگابایت باشد`,
+      );
+    }
+    if (type !== 'general' && !allowedMimes.includes(file.mimetype)) {
+      throw new BadRequestException(`فرمت فایل مجاز نیست. فرمت‌های مجاز: ${allowedMimes.join(', ')}`);
+    }
+
     const publicUrl = await this.uploadService.uploadFileDirect(file, subFolder);
     return { success: true, data: { publicUrl } };
   }

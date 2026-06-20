@@ -6,7 +6,7 @@ export class GetPresignedUrlDto {
   @IsString()
   fileName!: string;
 
-  @ApiProperty({ description: 'نوع فایل', enum: ['image', 'video'] })
-  @IsIn(['image', 'video'])
-  type!: 'image' | 'video';
+  @ApiProperty({ description: 'نوع فایل', enum: ['image', 'video', 'file'] })
+  @IsIn(['image', 'video', 'file'])
+  type!: 'image' | 'video' | 'file';
 }

@@ -38,7 +38,7 @@ async function bootstrap() {
   
   // Swagger
   const config = new DocumentBuilder()
-    .setTitle('Zakhm Clinic Backend API')
+    .setTitle('Bazafarin Clinic Backend API')
     .setDescription('API for business website with admin panel')
     .setVersion('1.0')
     .addBearerAuth()
