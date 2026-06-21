@@ -15,6 +15,12 @@ export class DoctorService {
     private uploadService: UploadService,
   ) {}
 
+  async findOneEntity(id: string): Promise<Doctor> {
+    const doctor = await this.doctorRepository.findOne({ where: { id } });
+    if (!doctor) throw new NotFoundException('پزشک یافت نشد');
+    return doctor;
+  }
+
   async create(createDto: CreateDoctorDto): Promise<Doctor> {
     if (createDto.nationalCode) {
       const existing = await this.doctorRepository.findOne({ where: { nationalCode: createDto.nationalCode } });
@@ -29,7 +35,7 @@ export class DoctorService {
     limit: number,
     search?: string,
     status?: DoctorStatus,
-  ): Promise<{ items: Partial<DoctorResponseDto>[]; total: number }> {
+  ): Promise<{ items: DoctorResponseDto[]; total: number }> {
     const qb = this.doctorRepository.createQueryBuilder('d');
 
     if (search) {
@@ -48,18 +54,27 @@ export class DoctorService {
 
     const [items, total] = await qb.getManyAndCount();
 
-    const dtos = items.map(item => ({
+    const dtos = items.map(item => new DoctorResponseDto({
       id: item.id,
       fullName: item.fullName,
       avatar: item.avatar,
-      status: item.status,
+      mobile: item.mobile,
+      nationalCode: item.nationalCode,
       degree: item.degree,
       university: item.university,
-      specialties: item.specialties,
       woundCareExperience: item.woundCareExperience,
       fieldExperience: item.fieldExperience,
+      province: item.province,
+      city: item.city,
+      workAddress: item.workAddress,
+      specialties: item.specialties,
       presenceDays: item.presenceDays,
       presenceHours: item.presenceHours,
+      medicalCouncilFile: item.medicalCouncilFile,
+      bio: item.bio,
+      status: item.status,
+      createdAt: item.createdAt,
+      updatedAt: item.updatedAt,
     }));
 
     return { items: dtos, total };
@@ -110,37 +125,40 @@ export class DoctorService {
     };
   }
 
-  async findOneAdmin(id: string): Promise<Doctor> {
-    const doctor = await this.doctorRepository.findOne({ where: { id } });
-    if (!doctor) throw new NotFoundException('پزشک یافت نشد');
-    return doctor;
+  async findOneAdmin(id: string): Promise<DoctorResponseDto> {
+    const doctor = await this.findOneEntity(id);
+    return new DoctorResponseDto({
+      ...doctor,
+      createdAt: doctor.createdAt,
+      updatedAt: doctor.updatedAt,
+    });
   }
 
   async update(id: string, updateDto: UpdateDoctorDto): Promise<Doctor> {
-    const doctor = await this.findOneAdmin(id);
+    const doctor = await this.findOneEntity(id);
     const oldAvatar = doctor.avatar;
     const oldFile = doctor.medicalCouncilFile;
 
     Object.assign(doctor, updateDto);
     const updated = await this.doctorRepository.save(doctor);
 
-    if (updateDto.avatar && updateDto.avatar !== oldAvatar) {
+    if (updateDto.avatar && oldAvatar && updateDto.avatar !== oldAvatar) {
       await this.uploadService.deleteFile(oldAvatar).catch(e => console.error('خطا در حذف avatar:', e));
     }
-    if (updateDto.medicalCouncilFile && updateDto.medicalCouncilFile !== oldFile) {
+    if (updateDto.medicalCouncilFile && oldFile && updateDto.medicalCouncilFile !== oldFile) {
       await this.uploadService.deleteFile(oldFile).catch(e => console.error('خطا در حذف فایل نظام پزشکی:', e));
     }
     return updated;
   }
 
   async updateStatus(id: string, status: DoctorStatus): Promise<Doctor> {
-    const doctor = await this.findOneAdmin(id);
+    const doctor = await this.findOneEntity(id);
     doctor.status = status;
     return this.doctorRepository.save(doctor);
   }
 
   async remove(id: string): Promise<void> {
-    const doctor = await this.findOneAdmin(id);
+    const doctor = await this.findOneEntity(id);
     if (doctor.avatar) {
       await this.uploadService.deleteFile(doctor.avatar).catch(e => console.error('خطا در حذف avatar:', e));
     }

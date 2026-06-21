@@ -21,7 +21,7 @@ export class AdminDoctorController {
   async findAll(@Query() query: QueryDoctorDto) {
     const { page = 1, limit = 10, search, status } = query;
     const result = await this.doctorService.findAllAdmin(page, limit, search, status);
-    return { ...result };
+    return { items: result.items, total: result.total };
   }
 
   @Get('status-counts')
